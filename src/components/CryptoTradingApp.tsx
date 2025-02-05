@@ -1,51 +1,66 @@
 "use client"
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";import { Input } from '@/components/ui/input';
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+type CoinType = 'Bitcoin' | 'Ethereum' | 'Cardano';
+
+type MarketPrices = {
+  [K in CoinType]: number;
+}
+
+interface PortfolioItem {
+  amount: number;
+  price: number;
+}
+
+type Portfolio = {
+  [K in CoinType]: PortfolioItem;
+}
 
 const CryptoTradingApp = () => {
-  // Initial market data
-  const [marketPrices] = useState({
+  const [marketPrices] = useState<MarketPrices>({
     Bitcoin: 27500,
     Ethereum: 1850,
     Cardano: 0.35
   });
 
-  // Portfolio state
-  const [portfolio, setPortfolio] = useState({
+  const [portfolio, setPortfolio] = useState<Portfolio>({
     Bitcoin: { amount: 0.5, price: 27000 },
     Ethereum: { amount: 10, price: 1800 },
     Cardano: { amount: 1000, price: 0.3 }
   });
 
-  // Trading form state
-  const [selectedCoin, setSelectedCoin] = useState('Bitcoin');
-  const [amount, setAmount] = useState('');
-  const [error, setError] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState<CoinType>('Bitcoin');
+  const [amount, setAmount] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  // Calculate total portfolio value
-  const calculateTotalValue = () => {
+  const calculateTotalValue = (): number => {
     return Object.entries(portfolio).reduce((total, [coin, data]) => {
-      return total + (data.amount * marketPrices[coin]);
+      return total + (data.amount * marketPrices[coin as CoinType]);
     }, 0);
   };
 
-  // Handle buying cryptocurrency
   const handleBuy = () => {
-    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+    if (!amount || isNaN(Number(amount)) || parseFloat(amount) <= 0) {
       setError('Please enter a valid amount');
       return;
     }
-
     setPortfolio(prev => ({
       ...prev,
       [selectedCoin]: {
@@ -57,18 +72,15 @@ const CryptoTradingApp = () => {
     setError('');
   };
 
-  // Handle selling cryptocurrency
   const handleSell = () => {
-    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+    if (!amount || isNaN(Number(amount)) || parseFloat(amount) <= 0) {
       setError('Please enter a valid amount');
       return;
     }
-
     if (!portfolio[selectedCoin] || portfolio[selectedCoin].amount < parseFloat(amount)) {
       setError('Insufficient balance');
       return;
     }
-
     setPortfolio(prev => ({
       ...prev,
       [selectedCoin]: {
@@ -83,9 +95,8 @@ const CryptoTradingApp = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold mb-6">Crypto Trading Platform</h1>
-
-      {/* Portfolio Card */}
-      <Card>
+      
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Portfolio Overview</CardTitle>
         </CardHeader>
@@ -96,8 +107,8 @@ const CryptoTradingApp = () => {
                 <span className="font-medium">{coin}</span>
                 <div className="text-right">
                   <div>{data.amount.toFixed(4)} coins</div>
-                  <div className="text-gray-600">
-                    ${(data.amount * marketPrices[coin]).toFixed(2)}
+                  <div className="text-muted-foreground">
+                    ${(data.amount * marketPrices[coin as CoinType]).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -112,21 +123,22 @@ const CryptoTradingApp = () => {
         </CardContent>
       </Card>
 
-      {/* Trading Card */}
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Trade Cryptocurrency</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div>
-              <label className="block mb-2">Select Coin</label>
-              <Select value={selectedCoin} onValueChange={setSelectedCoin}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Select Coin
+              </label>
+              <Select value={selectedCoin} onValueChange={(value: CoinType) => setSelectedCoin(value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a cryptocurrency" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.keys(marketPrices).map(coin => (
+                  {(Object.keys(marketPrices) as CoinType[]).map(coin => (
                     <SelectItem key={coin} value={coin}>
                       {coin}
                     </SelectItem>
@@ -135,8 +147,10 @@ const CryptoTradingApp = () => {
               </Select>
             </div>
 
-            <div>
-              <label className="block mb-2">Amount</label>
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Amount
+              </label>
               <Input
                 type="number"
                 value={amount}
@@ -163,8 +177,7 @@ const CryptoTradingApp = () => {
         </CardContent>
       </Card>
 
-      {/* Market Prices Card */}
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Market Prices</CardTitle>
         </CardHeader>
@@ -180,24 +193,28 @@ const CryptoTradingApp = () => {
         </CardContent>
       </Card>
 
-      {/* Educational Resources Card */}
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Educational Resources</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <h3 className="font-medium">What is Blockchain?</h3>
-            <p className="text-gray-600">Learn the fundamentals of blockchain technology</p>
-
-            <h3 className="font-medium">How to Trade Cryptocurrencies?</h3>
-            <p className="text-gray-600">Basic and advanced trading strategies</p>
-
-            <h3 className="font-medium">Understanding Market Trends</h3>
-            <p className="text-gray-600">Technical and fundamental analysis</p>
-
-            <h3 className="font-medium">Cryptocurrency Security</h3>
-            <p className="text-gray-600">Best practices for securing your assets</p>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-medium">What is Blockchain?</h3>
+              <p className="text-muted-foreground">Learn the fundamentals of blockchain technology</p>
+            </div>
+            <div>
+              <h3 className="font-medium">How to Trade Cryptocurrencies?</h3>
+              <p className="text-muted-foreground">Basic and advanced trading strategies</p>
+            </div>
+            <div>
+              <h3 className="font-medium">Understanding Market Trends</h3>
+              <p className="text-muted-foreground">Technical and fundamental analysis</p>
+            </div>
+            <div>
+              <h3 className="font-medium">Cryptocurrency Security</h3>
+              <p className="text-muted-foreground">Best practices for securing your assets</p>
+            </div>
           </div>
         </CardContent>
       </Card>

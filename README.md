@@ -26,7 +26,7 @@ A modern, React-based cryptocurrency trading simulation platform built with Type
 1. Install the required shadcn/ui components:
 
 ```bash
-npx shadcn-ui@latest add card select input button alert
+npx shadcn@latest add card select input button alert
 ```
 
 2. Install other dependencies:

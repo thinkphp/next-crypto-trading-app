@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 # Crypto Trading Platform
 
-A modern, React-based cryptocurrency trading simulation platform built with TypeScript and shadcn/ui components. This application allows users to manage a virtual cryptocurrency portfolio with real-time market prices.
+A modern, Nextjs-based cryptocurrency trading simulation platform built with TypeScript and shadcn/ui components. This application allows users to manage a virtual cryptocurrency portfolio with real-time market prices.
 
 ## Features
 

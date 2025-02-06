@@ -1,36 +1,122 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Crypto Trading Platform
 
-First, run the development server:
+A modern, React-based cryptocurrency trading simulation platform built with TypeScript and shadcn/ui components. This application allows users to manage a virtual cryptocurrency portfolio with real-time market prices.
+
+## Features
+
+- Portfolio management with support for Bitcoin, Ethereum, and Cardano
+- Real-time market price tracking
+- Buy and sell cryptocurrency functionality
+- Portfolio value calculation
+- Educational resources section
+- Modern, responsive UI using shadcn/ui components
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- React 18+
+- TypeScript 4.5+
+- shadcn/ui components
+
+## Installation
+
+1. Install the required shadcn/ui components:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx shadcn-ui@latest add card select input button alert
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install other dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+# or
+yarn
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Component Structure
 
-## Learn More
+The `CryptoTradingApp` component consists of several key sections:
 
-To learn more about Next.js, take a look at the following resources:
+### Types and Interfaces
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```typescript
+type CoinType = 'Bitcoin' | 'Ethereum' | 'Cardano'
+type MarketPrices = {
+  [K in CoinType]: number
+}
+interface PortfolioItem {
+  amount: number
+  price: number
+}
+type Portfolio = {
+  [K in CoinType]: PortfolioItem
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### State Management
 
-## Deploy on Vercel
+The component manages the following state:
+- Market prices for supported cryptocurrencies
+- User's portfolio with coin amounts and purchase prices
+- Selected coin for trading
+- Input amount for transactions
+- Error messages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Key Functions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `calculateTotalValue()`: Calculates the total portfolio value based on current market prices
+- `handleBuy()`: Processes buy transactions with input validation
+- `handleSell()`: Processes sell transactions with balance verification
+
+## Usage
+
+Import and use the component in your React application:
+
+```tsx
+import CryptoTradingApp from './CryptoTradingApp'
+
+function App() {
+  return <CryptoTradingApp />
+}
+```
+
+## UI Components
+
+The application includes four main card sections:
+1. Portfolio Overview - Displays current holdings and total value
+2. Trading Interface - Allows users to buy and sell cryptocurrencies
+3. Market Prices - Shows current prices for supported cryptocurrencies
+4. Educational Resources - Provides learning materials about cryptocurrency
+
+## Styling
+
+The component uses Tailwind CSS classes for styling and layout:
+- Responsive design with `max-w-4xl` container
+- Consistent spacing using `space-y-` utilities
+- Flexible layouts with `flex` and `grid` components
+
+## Error Handling
+
+The component includes validation for:
+- Invalid input amounts
+- Insufficient balance for sell transactions
+- Input formatting requirements
+
+## Customization
+
+To modify supported cryptocurrencies:
+1. Update the `CoinType` type definition
+2. Modify the initial `marketPrices` state
+3. Adjust the initial `portfolio` state accordingly
+
+## Contributing
+
+Feel free to submit issues and enhancement requests.
+
+## License
+
+MIT
